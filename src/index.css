@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  /* ---- Brand color tokens, extracted from the IWS mark ---- */
+  --color-navy-950: #0A1B2C;
+  --color-navy-900: #10263B;
+  --color-navy-800: #16324D;
+  --color-navy-700: #1E496E;   /* logo deep navy */
+  --color-blue-600: #2E71A8;
+  --color-blue-500: #3B89CA;   /* logo primary blue */
+  --color-sky-400:  #5CB0E5;   /* logo light blue */
+  --color-sky-300:  #8FCBF0;
+  --color-slate-500:#5B5D62;   /* logo gray facet */
+  --color-slate-300:#A7ACB3;
+  --color-coral-500:#FF5A45;   /* energy accent — not in logo, added for "funky" pop */
+  --color-coral-400:#FF7A61;
+  --color-paper:    #F5F7FA;
+  --color-ink-900:  #10181F;
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --animate-blink: blink 1.1s step-end infinite;
+  --animate-testimonial-scroll: testimonial-scroll 55s linear infinite;
+}
+
+@keyframes testimonial-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 0.75rem)); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink-900);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Faceted clip-path used as the recurring "shard" motif, echoing the logo's folded planes */
+.facet-cut {
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+}
+.facet-cut-rev {
+  clip-path: polygon(0 12%, 100% 0, 100% 100%, 0 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection {
+  background: var(--color-coral-500);
+  color: white;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-coral-500);
+  outline-offset: 3px;
+}
