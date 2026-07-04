@@ -54,6 +54,13 @@ body {
   clip-path: polygon(0 12%, 100% 0, 100% 100%, 0 100%);
 }
 
+@media (pointer: fine) {
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;

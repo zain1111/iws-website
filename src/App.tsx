@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Nav from "./components/Nav";
 import ScrollProgress from "./components/ScrollProgress";
+import CustomCursor from "./components/CustomCursor";
 import ScrollManager from "./components/ScrollManager";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -12,6 +13,7 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <ScrollProgress />
+      <CustomCursor />
       <ScrollManager />
       <Nav />
       <main>
