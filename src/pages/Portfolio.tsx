@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { CATEGORIES, PROJECTS, type Category } from "../data/projects";
+import { CATEGORIES, PROJECTS, sortedProjects, type Category } from "../data/projects";
 import { EASE, SCROLL_SPRING } from "../lib/motion";
 import ProjectCard from "../components/ProjectCard";
 import CtaBand from "../components/CtaBand";
@@ -16,7 +16,9 @@ export default function Portfolio() {
   const shardY2 = useTransform(p, [0, 1], [0, -120]);
   const headY = useTransform(p, [0, 1], [0, 90]);
 
-  const projects = filter === "All" ? PROJECTS : PROJECTS.filter((x) => x.category === filter);
+  const projects = sortedProjects(
+    filter === "All" ? PROJECTS : PROJECTS.filter((x) => x.category === filter),
+  );
 
   return (
     <>

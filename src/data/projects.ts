@@ -13,6 +13,7 @@ import ledgerist from "../assets/portfolio/ledgerist.jpg";
 import mrtex from "../assets/portfolio/mrtex.jpg";
 import walkercenter from "../assets/portfolio/walkercenter.jpg";
 import wulfdesigns from "../assets/portfolio/wulfdesigns.jpg";
+import kashmirblue from "../assets/portfolio/kashmirblue.jpg";
 
 export type Category =
   | "AI & SaaS"
@@ -36,13 +37,17 @@ export interface Project {
   image?: string;
   /** Fallback gradient (also used as the loading backdrop behind screenshots). */
   gradient: string;
-  featured?: boolean;
+  /**
+   * Homepage pin order (1 = first). Only projects with `featured` appear
+   * on the home Work section; lower numbers sort first on /portfolio too.
+   */
+  featured?: number;
 }
 
 /**
  * Single source of truth for portfolio work. The home page shows the
- * `featured` subset; the /portfolio page shows everything. Add new
- * projects here and both surfaces update.
+ * `featured` subset (sorted by pin order); the /portfolio page shows
+ * everything with featured projects pinned to the top.
  */
 export const PROJECTS: Project[] = [
   {
@@ -56,7 +61,7 @@ export const PROJECTS: Project[] = [
     url: "https://ricekids.org/",
     image: ricekids,
     gradient: "from-blue-500 to-navy-700",
-    featured: true,
+    featured: 2,
   },
   {
     slug: "amaterasu",
@@ -69,7 +74,6 @@ export const PROJECTS: Project[] = [
     url: "https://amaterasu.ai/",
     image: amaterasu,
     gradient: "from-blue-500 to-navy-700",
-    featured: true,
   },
   {
     slug: "bionicvo",
@@ -82,7 +86,7 @@ export const PROJECTS: Project[] = [
     url: "https://staging-app.bionicvo.us/",
     image: bionicvo,
     gradient: "from-sky-400 to-blue-600",
-    featured: true,
+    featured: 1,
   },
   {
     slug: "humanistai",
@@ -95,7 +99,7 @@ export const PROJECTS: Project[] = [
     url: "https://thehumanistai.com/",
     image: humanistai,
     gradient: "from-navy-700 to-blue-600",
-    featured: true,
+    featured: 3,
   },
   {
     slug: "garberbros",
@@ -108,7 +112,6 @@ export const PROJECTS: Project[] = [
     url: "https://garberbrosinc.com/",
     image: garberbros,
     gradient: "from-blue-600 to-navy-900",
-    featured: true,
   },
   {
     slug: "amotrial",
@@ -133,7 +136,7 @@ export const PROJECTS: Project[] = [
     url: "https://yachtlens.com/",
     image: yachtlens,
     gradient: "from-sky-400 to-blue-600",
-    featured: true,
+    featured: 5,
   },
   {
     slug: "lifescivoice",
@@ -170,7 +173,6 @@ export const PROJECTS: Project[] = [
     url: "https://vanguardstudentlabs.com/",
     image: vanguard,
     gradient: "from-navy-900 to-slate-600",
-    featured: true,
   },
   {
     slug: "lslinstitute",
@@ -183,7 +185,6 @@ export const PROJECTS: Project[] = [
     url: "https://lslinstitute.org/",
     image: lslinstitute,
     gradient: "from-slate-400 to-navy-800",
-    featured: true,
   },
   {
     slug: "ledgerist",
@@ -196,7 +197,7 @@ export const PROJECTS: Project[] = [
     url: "https://ledgerist.netlify.app/",
     image: ledgerist,
     gradient: "from-navy-900 to-sky-600",
-    featured: true,
+    featured: 4,
   },
   {
     slug: "mrtex",
@@ -209,7 +210,6 @@ export const PROJECTS: Project[] = [
     url: "https://mrtex.net/",
     image: mrtex,
     gradient: "from-navy-900 to-blue-600",
-    featured: true,
   },
   {
     slug: "walkercenter",
@@ -222,7 +222,6 @@ export const PROJECTS: Project[] = [
     url: "https://www.thewalkercenter.org/",
     image: walkercenter,
     gradient: "from-slate-500 to-navy-800",
-    featured: true,
   },
   {
     slug: "wulfdesigns",
@@ -235,11 +234,35 @@ export const PROJECTS: Project[] = [
     url: "https://wulfdesigns.net/",
     image: wulfdesigns,
     gradient: "from-navy-900 to-coral-500",
-    featured: true,
+  },
+  {
+    slug: "kashmirblue",
+    name: "Kashmir Blue Energy",
+    category: "Business & Corporate",
+    stack: ["React", "Vite", "Tailwind"],
+    summary: "Corporate site for expert oilfield and well services.",
+    detail:
+      "Expert oilfield services delivering reliable well solutions across the energy sector. A clear service-line structure covering work above and below ground, with safety, careers, and contact paths for operators who need a credible field partner.",
+    url: "https://kashmirblue.netlify.app/",
+    image: kashmirblue,
+    gradient: "from-sky-500 to-navy-900",
   },
 ];
 
-export const FEATURED = PROJECTS.filter((p) => p.featured);
+/** Featured projects for the homepage, sorted by pin order. */
+export const FEATURED = PROJECTS.filter((p) => p.featured != null).sort(
+  (a, b) => (a.featured ?? 0) - (b.featured ?? 0),
+);
+
+/** Portfolio list with featured pins first, then the rest in definition order. */
+export function sortedProjects(list: Project[] = PROJECTS) {
+  return [...list].sort((a, b) => {
+    const af = a.featured ?? Number.POSITIVE_INFINITY;
+    const bf = b.featured ?? Number.POSITIVE_INFINITY;
+    if (af !== bf) return af - bf;
+    return 0;
+  });
+}
 
 export const CATEGORIES: ("All" | Category)[] = [
   "All",
