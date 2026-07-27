@@ -136,7 +136,6 @@ export const PROJECTS: Project[] = [
     url: "https://yachtlens.com/",
     image: yachtlens,
     gradient: "from-sky-400 to-blue-600",
-    featured: 5,
   },
   {
     slug: "lifescivoice",
@@ -173,6 +172,7 @@ export const PROJECTS: Project[] = [
     url: "https://vanguardstudentlabs.com/",
     image: vanguard,
     gradient: "from-navy-900 to-slate-600",
+    featured: 5,
   },
   {
     slug: "lslinstitute",
