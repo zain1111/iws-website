@@ -9,6 +9,10 @@ import yachtlens from "../assets/portfolio/yachtlens.jpg";
 import lifescivoice from "../assets/portfolio/lifescivoice.jpg";
 import vanguard from "../assets/portfolio/vanguard.jpg";
 import lslinstitute from "../assets/portfolio/lslinstitute.jpg";
+import ledgerist from "../assets/portfolio/ledgerist.jpg";
+import mrtex from "../assets/portfolio/mrtex.jpg";
+import walkercenter from "../assets/portfolio/walkercenter.jpg";
+import wulfdesigns from "../assets/portfolio/wulfdesigns.jpg";
 
 export type Category =
   | "AI & SaaS"
@@ -179,6 +183,58 @@ export const PROJECTS: Project[] = [
     url: "https://lslinstitute.org/",
     image: lslinstitute,
     gradient: "from-slate-400 to-navy-800",
+    featured: true,
+  },
+  {
+    slug: "ledgerist",
+    name: "Your Ledger",
+    category: "AI & SaaS",
+    stack: ["React", "Vite", "Auth"],
+    summary: "Personal finance ledger app with secure per-device sign-in.",
+    detail:
+      "A dark-mode SaaS ledger for tracking finances with email authentication, password recovery, and account creation. Built as a focused product UI — clean auth flows first, then a private data workspace once signed in.",
+    url: "https://ledgerist.netlify.app/",
+    image: ledgerist,
+    gradient: "from-navy-900 to-sky-600",
+    featured: true,
+  },
+  {
+    slug: "mrtex",
+    name: "MR Tex",
+    category: "Business & Corporate",
+    stack: ["HTML", "CSS", "JS"],
+    summary: "Apparel sourcing site for a Bangladesh garment buying house.",
+    detail:
+      "Strategic apparel sourcing for global brands — factory vetting, quality assurance, and shipment coordination. A dark, product-led corporate site with capabilities, case studies, and a clear path to start a conversation.",
+    url: "https://mrtex.net/",
+    image: mrtex,
+    gradient: "from-navy-900 to-blue-600",
+    featured: true,
+  },
+  {
+    slug: "walkercenter",
+    name: "The Walker Center",
+    category: "Nonprofit",
+    stack: ["WordPress", "CMS", "SEO"],
+    summary: "Trust-first nonprofit site for addiction recovery programs.",
+    detail:
+      "Helping thousands recover from addiction since 1976. Built around program discovery, admissions confidence, FAQ, and alumni community — with clear calls to explore treatment paths and get help now.",
+    url: "https://www.thewalkercenter.org/",
+    image: walkercenter,
+    gradient: "from-slate-500 to-navy-800",
+    featured: true,
+  },
+  {
+    slug: "wulfdesigns",
+    name: "Wulf Designs",
+    category: "Marketing",
+    stack: ["WordPress", "CMS", "SEO"],
+    summary: "Event lighting brand site from concept to on-site execution.",
+    detail:
+      "Expert lighting solutions for every event — creative design, technical expertise, and on-site support. A dark, high-impact marketing site with project showcases, services, testimonials, and a fast contact path.",
+    url: "https://wulfdesigns.net/",
+    image: wulfdesigns,
+    gradient: "from-navy-900 to-coral-500",
     featured: true,
   },
 ];
