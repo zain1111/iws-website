@@ -27,7 +27,7 @@ export const FOUNDER: TeamMember = {
 export const TEAM: TeamMember[] = [
   {
     name: "Bilal Faisal",
-    role: "Co Founder / Senior MERN Stack Developer",
+    role: "Co Founder / Principal Software Architect",
     image: bilal,
   },
   {
