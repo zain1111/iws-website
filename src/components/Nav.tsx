@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { CONTACT } from "../data/contact";
+import { openCalendlyPopup } from "../lib/calendly";
 import logoColor from "../assets/logo-color.png";
 import logoWhite from "../assets/logo-white.png";
 
@@ -77,9 +78,13 @@ export default function Nav() {
             <span aria-hidden>↗</span>
           </a>
           <a
-            href={CONTACT.whatsappHref}
+            href={CONTACT.calendlyUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              void openCalendlyPopup();
+            }}
             className="inline-flex items-center gap-2 bg-navy-900 text-white font-display text-sm px-5 py-2.5 rounded-full hover:bg-coral-500 transition-colors duration-300"
           >
             Book a call
@@ -127,10 +132,14 @@ export default function Nav() {
             </li>
             <li>
               <a
-                href={CONTACT.whatsappHref}
+                href={CONTACT.calendlyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpen(false);
+                  void openCalendlyPopup();
+                }}
                 className="inline-block bg-navy-900 text-white px-5 py-2.5 rounded-full mt-2"
               >
                 Book a call

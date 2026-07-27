@@ -11,4 +11,9 @@ export const CONTACT = {
     "https://www.upwork.com/freelancers/~01a505408c8515b6ca?mp_source=share",
   whatsappHref: `https://wa.me/923090083051?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`,
   mailtoHref: "mailto:info@theiwsolutions.com",
+  /** Primary booking link — Calendly 30‑min strategy call */
+  calendlyUrl: "https://calendly.com/zain-theiwsolutions/30min",
+  /** Inline embed URL (hides Calendly chrome for a cleaner embed) */
+  calendlyEmbedUrl:
+    "https://calendly.com/zain-theiwsolutions/30min?hide_gdpr_banner=1&primary_color=ff5a45",
 } as const;

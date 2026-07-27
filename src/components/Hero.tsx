@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { EASE, SCROLL_SPRING } from "../lib/motion";
+import { openCalendlyPopup } from "../lib/calendly";
 import { CONTACT } from "../data/contact";
 
 const word1 = "Websites".split("");
@@ -129,9 +130,13 @@ export default function Hero() {
           className="mt-10 flex flex-wrap items-center gap-4"
         >
           <a
-            href={CONTACT.whatsappHref}
+            href={CONTACT.calendlyUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              void openCalendlyPopup();
+            }}
             className="group inline-flex items-center gap-2 bg-coral-500 text-white font-display font-medium px-7 py-3.5 rounded-full hover:bg-coral-400 transition-colors"
           >
             Book a free strategy call
