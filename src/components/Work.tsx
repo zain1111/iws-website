@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Reveal from "./Reveal";
 import SplitText from "./SplitText";
@@ -9,35 +9,71 @@ import { FEATURED } from "../data/projects";
 import { EASE } from "../lib/motion";
 
 const SLIDES = FEATURED.slice(0, 5);
+const GAP_PX = 16;
 
-export default function Work() {
-  const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
-  const count = SLIDES.length;
-
-  const goTo = useCallback(
-    (next: number, dir?: number) => {
-      if (count === 0) return;
-      const wrapped = ((next % count) + count) % count;
-      setDirection(dir ?? (wrapped > index ? 1 : -1));
-      setIndex(wrapped);
-    },
-    [count, index],
-  );
-
-  const prev = useCallback(() => goTo(index - 1, -1), [goTo, index]);
-  const next = useCallback(() => goTo(index + 1, 1), [goTo, index]);
+function useVisibleCount() {
+  const [visible, setVisible] = useState(3);
 
   useEffect(() => {
-    if (count <= 1) return;
+    const update = () => {
+      const w = window.innerWidth;
+      if (w < 640) setVisible(1);
+      else if (w < 1024) setVisible(2);
+      else setVisible(3);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return visible;
+}
+
+export default function Work() {
+  const visible = useVisibleCount();
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
+  const [cardWidth, setCardWidth] = useState(0);
+  const count = SLIDES.length;
+  const maxIndex = Math.max(0, count - visible);
+  const step = cardWidth + GAP_PX;
+
+  const goTo = useCallback(
+    (next: number) => {
+      setIndex(Math.min(Math.max(next, 0), maxIndex));
+    },
+    [maxIndex],
+  );
+
+  const prev = useCallback(() => goTo(index - 1), [goTo, index]);
+  const next = useCallback(() => goTo(index + 1), [goTo, index]);
+
+  useEffect(() => {
+    setIndex((i) => Math.min(i, maxIndex));
+  }, [maxIndex]);
+
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const measure = () => {
+      setCardWidth((el.clientWidth - GAP_PX * (visible - 1)) / visible);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [visible]);
+
+  useEffect(() => {
+    if (maxIndex === 0) return;
     const id = window.setInterval(() => {
-      setDirection(1);
-      setIndex((i) => (i + 1) % count);
+      setIndex((i) => (i >= maxIndex ? 0 : i + 1));
     }, 5500);
     return () => window.clearInterval(id);
-  }, [count, index]);
+  }, [maxIndex, index]);
 
-  const project = SLIDES[index];
+  const pageCount = maxIndex + 1;
 
   return (
     <section id="work" className="bg-paper py-28 lg:py-36 overflow-hidden">
@@ -53,66 +89,60 @@ export default function Work() {
             <button
               type="button"
               onClick={prev}
-              aria-label="Previous project"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-navy-900/15 text-navy-900 hover:border-coral-500 hover:text-coral-500 transition-colors"
+              disabled={index === 0}
+              aria-label="Previous projects"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-navy-900/15 text-navy-900 hover:border-coral-500 hover:text-coral-500 transition-colors disabled:opacity-30 disabled:pointer-events-none"
             >
               <ArrowLeft size={18} />
             </button>
             <button
               type="button"
               onClick={next}
-              aria-label="Next project"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-navy-900/15 text-navy-900 hover:border-coral-500 hover:text-coral-500 transition-colors"
+              disabled={index >= maxIndex}
+              aria-label="Next projects"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-navy-900/15 text-navy-900 hover:border-coral-500 hover:text-coral-500 transition-colors disabled:opacity-30 disabled:pointer-events-none"
             >
               <ArrowRight size={18} />
             </button>
           </div>
         </Reveal>
 
-        <Reveal className="mt-14 relative" variant="scale">
-          <div className="relative mx-auto max-w-3xl min-h-[28rem] sm:min-h-[30rem]">
-            <AnimatePresence mode="wait" custom={direction}>
-              {project && (
-                <motion.div
+        <Reveal className="mt-12" variant="scale">
+          <div ref={viewportRef} className="overflow-hidden">
+            <motion.div
+              className="flex"
+              style={{ gap: GAP_PX }}
+              animate={{ x: cardWidth ? -index * step : 0 }}
+              transition={{ duration: 0.5, ease: EASE }}
+            >
+              {SLIDES.map((project) => (
+                <div
                   key={project.slug}
-                  custom={direction}
-                  variants={{
-                    enter: (d: number) => ({ x: d >= 0 ? 80 : -80, opacity: 0 }),
-                    center: { x: 0, opacity: 1 },
-                    exit: (d: number) => ({ x: d >= 0 ? -80 : 80, opacity: 0 }),
-                  }}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.45, ease: EASE }}
-                  className="w-full"
+                  className="shrink-0"
+                  style={cardWidth ? { width: cardWidth } : { width: `calc((100% - ${(visible - 1) * GAP_PX}px) / ${visible})` }}
                 >
-                  <ProjectCard project={project} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  <ProjectCard project={project} compact />
+                </div>
+              ))}
+            </motion.div>
           </div>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2" role="tablist" aria-label="Featured projects">
-              {SLIDES.map((p, i) => (
+            <div className="flex items-center gap-2" role="tablist" aria-label="Featured project pages">
+              {Array.from({ length: pageCount }, (_, i) => (
                 <button
-                  key={p.slug}
+                  key={i}
                   type="button"
                   role="tab"
                   aria-selected={i === index}
-                  aria-label={`Show ${p.name}`}
-                  onClick={() => goTo(i, i > index ? 1 : -1)}
+                  aria-label={`Show page ${i + 1}`}
+                  onClick={() => goTo(i)}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     i === index ? "w-8 bg-coral-500" : "w-2 bg-navy-900/20 hover:bg-navy-900/40"
                   }`}
                 />
               ))}
             </div>
-
-            <p className="font-mono text-xs text-slate-400 order-first sm:order-none">
-              {String(index + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
-            </p>
 
             <Link
               to="/portfolio"
