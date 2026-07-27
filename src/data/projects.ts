@@ -6,6 +6,9 @@ import healthcarechief from "../assets/portfolio/healthcarechief.jpg";
 import garberbros from "../assets/portfolio/garberbros.jpg";
 import humanistai from "../assets/portfolio/humanistai.jpg";
 import yachtlens from "../assets/portfolio/yachtlens.jpg";
+import lifescivoice from "../assets/portfolio/lifescivoice.jpg";
+import vanguard from "../assets/portfolio/vanguard.jpg";
+import lslinstitute from "../assets/portfolio/lslinstitute.jpg";
 
 export type Category =
   | "AI & SaaS"
@@ -137,6 +140,7 @@ export const PROJECTS: Project[] = [
     detail:
       "A content-dense news magazine covering R&D, clinical, commercial, and regulatory beats — architected with taxonomy, related-content, and performance work to keep a large article archive fast and discoverable.",
     url: "https://lifescivoice.com/",
+    image: lifescivoice,
     gradient: "from-navy-700 to-slate-500",
   },
   {
@@ -150,6 +154,32 @@ export const PROJECTS: Project[] = [
     url: "https://healthcarechief.com/",
     image: healthcarechief,
     gradient: "from-blue-500 to-navy-700",
+  },
+  {
+    slug: "vanguard",
+    name: "Vanguard Student Labs",
+    category: "Business & Corporate",
+    stack: ["React", "Vite", "Tailwind"],
+    summary: "Premium brand site for an elite student capstone incubator.",
+    detail:
+      "A conversion-focused site for a capstone project incubator helping ambitious students launch foundations, publish books, and produce independent research. Built around a cinematic hero, clear track narratives (Founder, Author, Scholar), case outcomes, and a private consultation path.",
+    url: "https://vanguardstudentlabs.com/",
+    image: vanguard,
+    gradient: "from-navy-900 to-slate-600",
+    featured: true,
+  },
+  {
+    slug: "lslinstitute",
+    name: "Life Sciences Leadership Institute",
+    category: "Nonprofit",
+    stack: ["React", "Vite", "Tailwind"],
+    summary: "Institutional site for a non-profit executive leadership forum.",
+    detail:
+      "An independent non-profit convening global life-sciences executives around operational strategy and health equity. We designed a restrained, trust-forward presence — manifesto, programs, charter, and executive inquiry — tuned for a high-discretion audience.",
+    url: "https://lslinstitute.org/",
+    image: lslinstitute,
+    gradient: "from-slate-400 to-navy-800",
+    featured: true,
   },
 ];
 

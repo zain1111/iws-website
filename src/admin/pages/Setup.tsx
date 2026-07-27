@@ -12,12 +12,22 @@ export default function AdminSetup() {
             <a className="text-coral-500 underline" href="https://supabase.com" target="_blank" rel="noreferrer">
               supabase.com
             </a>
+            , then open <strong>Project Settings → API</strong>.
           </li>
           <li>
-            Copy <code className="font-mono text-xs bg-navy-900/5 px-1 rounded">VITE_SUPABASE_URL</code> and{" "}
-            <code className="font-mono text-xs bg-navy-900/5 px-1 rounded">VITE_SUPABASE_ANON_KEY</code> into a{" "}
-            <code className="font-mono text-xs bg-navy-900/5 px-1 rounded">.env</code> file (see{" "}
-            <code className="font-mono text-xs">.env.example</code>).
+            Set <code className="font-mono text-xs bg-navy-900/5 px-1 rounded">VITE_SUPABASE_URL</code> and{" "}
+            <code className="font-mono text-xs bg-navy-900/5 px-1 rounded">VITE_SUPABASE_ANON_KEY</code>:
+            <ul className="list-disc pl-5 mt-2 space-y-1">
+              <li>
+                <strong>Local:</strong> copy into a <code className="font-mono text-xs">.env</code> file (see{" "}
+                <code className="font-mono text-xs">.env.example</code>), then restart{" "}
+                <code className="font-mono text-xs">npm run dev</code>.
+              </li>
+              <li>
+                <strong>Netlify:</strong> Site configuration → Environment variables → add both keys →{" "}
+                <strong>Trigger deploy → Clear cache and deploy site</strong> (Vite needs a rebuild to pick them up).
+              </li>
+            </ul>
           </li>
           <li>
             In Supabase SQL Editor, run the full script in{" "}
@@ -28,15 +38,15 @@ export default function AdminSetup() {
             super admin automatically.
           </li>
           <li>
-            For local testing: Authentication → Providers → Email → turn{" "}
-            <strong>Confirm email</strong> OFF (avoids expired link errors).
-          </li>
-          <li>
-            Authentication → URL Configuration → set Site URL to{" "}
-            <code className="font-mono text-xs">http://localhost:5173</code> and add Redirect URL{" "}
+            Supabase → Authentication → URL Configuration: set <strong>Site URL</strong> to your Netlify URL (and
+            keep <code className="font-mono text-xs">http://localhost:5173</code> for local). Add Redirect URLs for{" "}
+            <code className="font-mono text-xs">https://YOUR-SITE.netlify.app/admin/login</code> and{" "}
             <code className="font-mono text-xs">http://localhost:5173/admin/login</code>.
           </li>
-          <li>Restart <code className="font-mono text-xs">npm run dev</code>.</li>
+          <li>
+            For local testing only: Authentication → Providers → Email → turn{" "}
+            <strong>Confirm email</strong> OFF if you hit expired-link errors.
+          </li>
         </ol>
         <div className="mt-8 flex gap-4">
           <Link to="/admin/login" className="font-display text-sm bg-navy-900 text-white px-5 py-2.5 rounded-full">
