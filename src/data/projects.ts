@@ -14,6 +14,7 @@ import mrtex from "../assets/portfolio/mrtex.jpg";
 import walkercenter from "../assets/portfolio/walkercenter.jpg";
 import wulfdesigns from "../assets/portfolio/wulfdesigns.jpg";
 import kashmirblue from "../assets/portfolio/kashmirblue.jpg";
+import jamestrussart from "../assets/portfolio/jamestrussart.jpg";
 
 export type Category =
   | "AI & SaaS"
@@ -246,6 +247,18 @@ export const PROJECTS: Project[] = [
     url: "https://kashmirblue.netlify.app/",
     image: kashmirblue,
     gradient: "from-sky-500 to-navy-900",
+  },
+  {
+    slug: "jamestrussart",
+    name: "James Trussart Custom Guitars",
+    category: "Marketing",
+    stack: ["React", "Vite", "Tailwind"],
+    summary: "Brand site for handmade steel guitars from Los Angeles.",
+    detail:
+      "A product-forward marketing site for James Trussart Custom Guitars — handmade steel instruments out of Los Angeles. Built to showcase craft, models, and inquiry paths with a dark, high-impact brand presence.",
+    url: "https://jamestrussart.netlify.app/",
+    image: jamestrussart,
+    gradient: "from-navy-900 to-slate-600",
   },
 ];
 
