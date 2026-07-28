@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import type { Project } from "../data/projects";
+import { trackPortfolioProject } from "../lib/analytics";
 import Parallax from "./Parallax";
 
 interface ProjectCardProps {
@@ -8,15 +9,30 @@ interface ProjectCardProps {
   theme?: "light" | "dark";
   /** Tighter card for multi-item carousels. */
   compact?: boolean;
+  /** Where this card was shown (for analytics). */
+  source?: string;
 }
 
-export default function ProjectCard({ project, theme = "light", compact = false }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  theme = "light",
+  compact = false,
+  source = "portfolio",
+}: ProjectCardProps) {
   const dark = theme === "dark";
   return (
     <a
       href={project.url}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() =>
+        trackPortfolioProject({
+          slug: project.slug,
+          name: project.name,
+          category: project.category,
+          source,
+        })
+      }
       className={`group flex h-full flex-col overflow-hidden rounded-2xl border transition-colors duration-300 ${
         dark
           ? "border-white/10 bg-navy-800/40 hover:border-white/25"

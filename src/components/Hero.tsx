@@ -135,7 +135,7 @@ export default function Hero() {
             rel="noopener noreferrer"
             onClick={(e) => {
               e.preventDefault();
-              void openCalendlyPopup();
+              void openCalendlyPopup("hero");
             }}
             className="group inline-flex items-center gap-2 bg-coral-500 text-white font-display font-medium px-7 py-3.5 rounded-full hover:bg-coral-400 transition-colors"
           >

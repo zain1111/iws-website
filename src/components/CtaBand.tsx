@@ -50,7 +50,7 @@ export default function CtaBand() {
             rel="noopener noreferrer"
             onClick={(e) => {
               e.preventDefault();
-              void openCalendlyPopup();
+              void openCalendlyPopup("cta_band");
             }}
             className="mt-10 inline-flex items-center gap-2 bg-navy-900 text-white font-display font-medium px-8 py-4 rounded-full hover:bg-white hover:text-navy-900 transition-colors duration-300"
           >

@@ -121,7 +121,7 @@ export default function Work() {
                   className="shrink-0"
                   style={cardWidth ? { width: cardWidth } : { width: `calc((100% - ${(visible - 1) * GAP_PX}px) / ${visible})` }}
                 >
-                  <ProjectCard project={project} compact />
+                  <ProjectCard project={project} compact source="home_carousel" />
                 </div>
               ))}
             </motion.div>

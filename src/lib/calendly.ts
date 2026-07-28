@@ -1,4 +1,5 @@
 import { CONTACT } from "../data/contact";
+import { trackBookCall } from "./analytics";
 
 declare global {
   interface Window {
@@ -47,7 +48,8 @@ export function loadCalendly(): Promise<void> {
 }
 
 /** Open the Calendly booking popup (falls back to a new tab). */
-export async function openCalendlyPopup() {
+export async function openCalendlyPopup(location = "unknown") {
+  trackBookCall(location);
   try {
     await loadCalendly();
     if (window.Calendly?.initPopupWidget) {

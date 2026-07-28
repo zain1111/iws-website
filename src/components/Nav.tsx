@@ -83,7 +83,7 @@ export default function Nav() {
             rel="noopener noreferrer"
             onClick={(e) => {
               e.preventDefault();
-              void openCalendlyPopup();
+              void openCalendlyPopup("nav");
             }}
             className="inline-flex items-center gap-2 bg-navy-900 text-white font-display text-sm px-5 py-2.5 rounded-full hover:bg-coral-500 transition-colors duration-300"
           >
@@ -138,9 +138,7 @@ export default function Nav() {
                 onClick={(e) => {
                   e.preventDefault();
                   setOpen(false);
-                  void openCalendlyPopup();
-                }}
-                className="inline-block bg-navy-900 text-white px-5 py-2.5 rounded-full mt-2"
+                  void openCalendlyPopup("nav_mobile");
               >
                 Book a call
               </a>

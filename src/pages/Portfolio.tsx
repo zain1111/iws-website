@@ -103,7 +103,7 @@ export default function Portfolio() {
                   exit={{ opacity: 0, scale: 0.94 }}
                   transition={{ duration: 0.35, ease: EASE }}
                 >
-                  <ProjectCard project={project} />
+                  <ProjectCard project={project} source="portfolio_page" />
                 </motion.div>
               ))}
             </AnimatePresence>
