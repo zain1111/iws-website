@@ -139,6 +139,7 @@ export default function Nav() {
                   e.preventDefault();
                   setOpen(false);
                   void openCalendlyPopup("nav_mobile");
+                }}
               >
                 Book a call
               </a>
