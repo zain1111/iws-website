@@ -4,6 +4,7 @@ import ScrollProgress from "../components/ScrollProgress";
 import CustomCursor from "../components/CustomCursor";
 import ScrollManager from "../components/ScrollManager";
 import Footer from "../components/Footer";
+import CalendlyBookingModal from "../components/CalendlyBookingModal";
 
 /** Public marketing site chrome — not used on /admin routes. */
 export default function MarketingLayout() {
@@ -17,6 +18,7 @@ export default function MarketingLayout() {
         <Outlet />
       </main>
       <Footer />
+      <CalendlyBookingModal />
     </div>
   );
 }
