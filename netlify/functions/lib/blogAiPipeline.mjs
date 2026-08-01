@@ -45,7 +45,8 @@ async function geminiGenerate(prompt, { json = false } = {}) {
   const key = env("GEMINI_API_KEY");
   if (!key) throw new Error("Missing GEMINI_API_KEY");
 
-  const model = env("GEMINI_MODEL", "gemini-2.0-flash");
+  // gemini-2.0-flash free-tier quota is 0 (retired); use 2.5 Flash by default
+  const model = env("GEMINI_MODEL", "gemini-2.5-flash");
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
 
   const body = {
