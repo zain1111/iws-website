@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { blogImageUrl, slugify } from "../../lib/blog";
+import { blogImageUrl, slugify, RESERVED_PATHS } from "../../lib/blog";
 import { supabase } from "../../lib/supabase";
 import type { BlogPost, BlogPostStatus } from "../../types/database";
 
@@ -17,6 +17,10 @@ const emptyForm = {
   fiverr_url: "",
   upwork_url: "",
   featured_image_path: "" as string | null,
+  meta_title: "",
+  meta_description: "",
+  focus_keyword: "",
+  image_alt: "",
 };
 
 export default function AdminBlogPage() {
@@ -77,6 +81,10 @@ export default function AdminBlogPage() {
       fiverr_url: post.fiverr_url ?? "",
       upwork_url: post.upwork_url ?? "",
       featured_image_path: post.featured_image_path,
+      meta_title: post.meta_title ?? "",
+      meta_description: post.meta_description ?? "",
+      focus_keyword: post.focus_keyword ?? "",
+      image_alt: post.image_alt ?? "",
     });
     setFile(null);
     setView("form");
@@ -110,6 +118,11 @@ export default function AdminBlogPage() {
       setBusy(false);
       return;
     }
+    if (RESERVED_PATHS.has(slug)) {
+      setError(`Slug “${slug}” is reserved. Choose another permalink.`);
+      setBusy(false);
+      return;
+    }
     if (!form.content.trim()) {
       setError("Article content is required");
       setBusy(false);
@@ -130,6 +143,10 @@ export default function AdminBlogPage() {
         fiverr_url: form.fiverr_url.trim() || null,
         upwork_url: form.upwork_url.trim() || null,
         featured_image_path: imagePath || null,
+        meta_title: form.meta_title.trim() || null,
+        meta_description: form.meta_description.trim() || null,
+        focus_keyword: form.focus_keyword.trim() || null,
+        image_alt: form.image_alt.trim() || null,
         updated_at: new Date().toISOString(),
         published_at: publishing ? new Date().toISOString() : null,
       };
@@ -232,6 +249,38 @@ export default function AdminBlogPage() {
             rows={16}
             className="w-full rounded-xl border border-navy-900/15 px-4 py-3 font-mono text-sm outline-none focus:border-coral-500"
           />
+          <div className="rounded-xl border border-navy-900/10 bg-navy-900/[0.02] p-4 space-y-3">
+            <p className="font-mono text-[10px] uppercase tracking-wide text-slate-400">On-page SEO</p>
+            <input
+              value={form.meta_title}
+              onChange={(e) => setForm((f) => ({ ...f, meta_title: e.target.value }))}
+              placeholder="Meta title (≤60 chars, defaults to post title)"
+              maxLength={70}
+              className="w-full rounded-xl border border-navy-900/15 px-4 py-3 font-display text-sm outline-none focus:border-coral-500 bg-white"
+            />
+            <textarea
+              value={form.meta_description}
+              onChange={(e) => setForm((f) => ({ ...f, meta_description: e.target.value }))}
+              placeholder="Meta description (140–160 chars)"
+              maxLength={170}
+              rows={2}
+              className="w-full rounded-xl border border-navy-900/15 px-4 py-3 font-display text-sm outline-none focus:border-coral-500 bg-white"
+            />
+            <div className="grid sm:grid-cols-2 gap-3">
+              <input
+                value={form.focus_keyword}
+                onChange={(e) => setForm((f) => ({ ...f, focus_keyword: e.target.value }))}
+                placeholder="Focus keyword"
+                className="rounded-xl border border-navy-900/15 px-4 py-3 font-mono text-sm outline-none focus:border-coral-500 bg-white"
+              />
+              <input
+                value={form.image_alt}
+                onChange={(e) => setForm((f) => ({ ...f, image_alt: e.target.value }))}
+                placeholder="Featured image alt text"
+                className="rounded-xl border border-navy-900/15 px-4 py-3 font-display text-sm outline-none focus:border-coral-500 bg-white"
+              />
+            </div>
+          </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <input
               value={form.fiverr_url}
@@ -302,9 +351,13 @@ export default function AdminBlogPage() {
           <p className="font-mono text-xs text-coral-500 mb-2">// blog</p>
           <h1 className="font-display text-3xl text-navy-900 font-semibold">Blog posts</h1>
           <p className="text-sm text-slate-500 mt-2">
-            Publish daily articles. Ad units are managed in{" "}
+            Publish daily articles. Ad units in{" "}
             <Link to="/admin/blog-ads" className="text-coral-500 hover:underline">
               Blog ads
+            </Link>
+            . Auto-publish via{" "}
+            <Link to="/admin/blog-ai" className="text-coral-500 hover:underline">
+              AI Publisher
             </Link>
             .
           </p>
@@ -330,14 +383,15 @@ export default function AdminBlogPage() {
             <div className="min-w-0">
               <p className="font-display text-lg text-navy-900 truncate">{post.title}</p>
               <p className="font-mono text-xs text-slate-400 mt-1">
-                /blog/{post.slug} · {post.status}
+                /{post.slug} · {post.status}
+                {post.ai_generated ? " · AI" : ""}
                 {post.published_at ? ` · ${new Date(post.published_at).toLocaleDateString()}` : ""}
               </p>
             </div>
             <div className="flex flex-wrap gap-2 shrink-0">
               {post.status === "published" && (
                 <a
-                  href={`/blog/${post.slug}`}
+                  href={`/${post.slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="border border-navy-900/15 font-display text-sm px-4 py-2 rounded-full"

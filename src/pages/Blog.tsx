@@ -88,7 +88,7 @@ export default function BlogPage() {
           {featured && (
             <Reveal>
               <Link
-                to={`/blog/${featured.slug}`}
+                to={`/${featured.slug}`}
                 className="group grid lg:grid-cols-12 gap-0 overflow-hidden rounded-[2rem] border border-navy-900/10 bg-white hover:border-navy-900/25 transition-colors"
               >
                 <div className="relative lg:col-span-7 min-h-[280px] lg:min-h-[420px] bg-navy-900 overflow-hidden">
@@ -129,7 +129,7 @@ export default function BlogPage() {
               {rest.map((post, i) => (
                 <Reveal key={post.id} delay={(i % 3) * 0.08}>
                   <Link
-                    to={`/blog/${post.slug}`}
+                    to={`/${post.slug}`}
                     className="group flex h-full flex-col overflow-hidden rounded-2xl border border-navy-900/10 bg-white hover:border-navy-900/25 transition-colors"
                   >
                     <div className="relative aspect-[16/10] bg-navy-900 overflow-hidden">

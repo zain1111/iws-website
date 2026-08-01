@@ -10,6 +10,7 @@ import {
   postFiverrUrl,
   postUpworkUrl,
 } from "../lib/blog";
+import { applyBlogPostSeo } from "../lib/seo";
 import { supabase } from "../lib/supabase";
 import type { BlogAdSlot, BlogPost } from "../types/database";
 import { CONTACT } from "../data/contact";
@@ -49,11 +50,18 @@ export default function BlogPostPage() {
 
   useEffect(() => {
     if (!post) return;
-    document.title = `${post.title} — Integrated Web Solutions`;
-    return () => {
-      document.title = "Integrated Web Solutions — Websites that ship, not just launch";
-    };
-  }, [post]);
+    return applyBlogPostSeo({
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt,
+      meta_title: post.meta_title,
+      meta_description: post.meta_description,
+      focus_keyword: post.focus_keyword,
+      featured_image_url: image,
+      published_at: post.published_at,
+      updated_at: post.updated_at,
+    });
+  }, [post, image]);
 
   if (loading) {
     return (
@@ -106,7 +114,11 @@ export default function BlogPostPage() {
         <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
           <div className="relative -mb-16 lg:-mb-24 aspect-[21/9] overflow-hidden rounded-t-[2rem] border border-white/10 bg-navy-800">
             {image ? (
-              <img src={image} alt="" className="h-full w-full object-cover" />
+              <img
+                src={image}
+                alt={post.image_alt || post.title}
+                className="h-full w-full object-cover"
+              />
             ) : (
               <div className="h-full w-full bg-gradient-to-br from-coral-500/50 to-navy-800" />
             )}

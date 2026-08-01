@@ -5,6 +5,18 @@ export const DEFAULT_FIVERR_URL = "https://www.fiverr.com/s/38zRKlr";
 export const DEFAULT_UPWORK_URL =
   "https://www.upwork.com/freelancers/zainazeem?mp_source=share";
 
+/** Slugs that must not collide with marketing/admin routes. */
+export const RESERVED_PATHS = new Set([
+  "about",
+  "services",
+  "portfolio",
+  "blog",
+  "admin",
+  "contact",
+  "login",
+  "signup",
+]);
+
 export function slugify(input: string) {
   return input
     .toLowerCase()

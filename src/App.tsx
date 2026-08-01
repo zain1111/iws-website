@@ -24,8 +24,10 @@ import FinancePage from "./admin/pages/Finance";
 import SalariesPage from "./admin/pages/Salaries";
 import AdminBlogPage from "./admin/pages/Blog";
 import AdminBlogAdsPage from "./admin/pages/BlogAds";
+import AdminBlogAiPage from "./admin/pages/BlogAi";
 import BlogPage from "./pages/Blog";
 import BlogPostPage from "./pages/BlogPost";
+import BlogPostRedirect from "./pages/BlogPostRedirect";
 
 export default function App() {
   return (
@@ -38,7 +40,8 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/blog" element={<BlogPage />} />
-          <Route path="/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/blog/:slug" element={<BlogPostRedirect />} />
+          <Route path="/:slug" element={<BlogPostPage />} />
         </Route>
 
         <Route path="/admin/setup" element={<AdminSetup />} />
@@ -60,6 +63,7 @@ export default function App() {
             <Route path="invoices" element={<InvoicesPage />} />
             <Route path="blog" element={<AdminBlogPage />} />
             <Route path="blog-ads" element={<AdminBlogAdsPage />} />
+            <Route path="blog-ai" element={<AdminBlogAiPage />} />
           </Route>
         </Route>
       </Routes>

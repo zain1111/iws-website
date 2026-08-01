@@ -185,6 +185,25 @@ export interface BlogPost {
   created_by: string;
   created_at: string;
   updated_at: string;
+  meta_title: string | null;
+  meta_description: string | null;
+  focus_keyword: string | null;
+  image_alt: string | null;
+  source_topic: string | null;
+  ai_generated: boolean;
+}
+
+export interface BlogAiRun {
+  id: string;
+  status: "running" | "success" | "partial" | "failed";
+  trigger: "manual" | "schedule";
+  articles_requested: number;
+  articles_published: number;
+  log: unknown[];
+  error: string | null;
+  created_by: string | null;
+  created_at: string;
+  finished_at: string | null;
 }
 
 export interface BlogAdSlot {
@@ -254,10 +273,27 @@ export interface Database {
       };
       blog_posts: {
         Row: BlogPost;
-        Insert: Omit<BlogPost, "id" | "created_at" | "updated_at"> & {
+        Insert: Omit<
+          BlogPost,
+          | "id"
+          | "created_at"
+          | "updated_at"
+          | "meta_title"
+          | "meta_description"
+          | "focus_keyword"
+          | "image_alt"
+          | "source_topic"
+          | "ai_generated"
+        > & {
           id?: string;
           created_at?: string;
           updated_at?: string;
+          meta_title?: string | null;
+          meta_description?: string | null;
+          focus_keyword?: string | null;
+          image_alt?: string | null;
+          source_topic?: string | null;
+          ai_generated?: boolean;
         };
         Update: Partial<BlogPost>;
       };
@@ -265,6 +301,11 @@ export interface Database {
         Row: BlogAdSlot;
         Insert: BlogAdSlot;
         Update: Partial<BlogAdSlot>;
+      };
+      blog_ai_runs: {
+        Row: BlogAiRun;
+        Insert: Omit<BlogAiRun, "id" | "created_at"> & { id?: string; created_at?: string };
+        Update: Partial<BlogAiRun>;
       };
     };
   };

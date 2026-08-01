@@ -5,6 +5,7 @@ import { CONTACT } from "../data/contact";
 import { openCalendlyPopup } from "../lib/calendly";
 import logoColor from "../assets/logo-color.png";
 import logoWhite from "../assets/logo-white.png";
+import { RESERVED_PATHS } from "../lib/blog";
 
 const NAV_LINKS = [
   { label: "About", to: "/about" },
@@ -12,6 +13,12 @@ const NAV_LINKS = [
   { label: "Portfolio", to: "/portfolio" },
   { label: "Blog", to: "/blog" },
 ];
+
+function isLikelyBlogPost(pathname: string) {
+  const parts = pathname.split("/").filter(Boolean);
+  if (parts.length !== 1) return false;
+  return !RESERVED_PATHS.has(parts[0]);
+}
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -23,7 +30,7 @@ export default function Nav() {
     pathname === "/portfolio" ||
     pathname === "/services" ||
     pathname === "/blog" ||
-    pathname.startsWith("/blog/");
+    isLikelyBlogPost(pathname);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);

@@ -21,6 +21,7 @@ export default function AdminShell() {
           { to: "/admin/invoices", label: "Invoices" },
           { to: "/admin/blog", label: "Blog" },
           { to: "/admin/blog-ads", label: "Blog ads" },
+          { to: "/admin/blog-ai", label: "AI Publisher" },
         ]
       : []),
   ];

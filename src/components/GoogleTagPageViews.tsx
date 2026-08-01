@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { trackScrollDepth } from "../lib/analytics";
+import { RESERVED_PATHS } from "../lib/blog";
 
 declare global {
   interface Window {
@@ -17,7 +18,9 @@ const TRACKED_PATHS = new Set(["/", "/portfolio", "/about", "/services", "/blog"
 
 function shouldTrackPath(pathname: string) {
   if (TRACKED_PATHS.has(pathname)) return true;
-  return pathname.startsWith("/blog/");
+  const parts = pathname.split("/").filter(Boolean);
+  if (parts.length !== 1) return false;
+  return !RESERVED_PATHS.has(parts[0]);
 }
 const SCROLL_MARKS = [25, 50, 75, 90] as const;
 
