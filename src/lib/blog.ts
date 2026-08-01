@@ -15,6 +15,10 @@ export const RESERVED_PATHS = new Set([
   "contact",
   "login",
   "signup",
+  "sitemap.xml",
+  "robots.txt",
+  "ads.txt",
+  "favicon.png",
 ]);
 
 export function slugify(input: string) {

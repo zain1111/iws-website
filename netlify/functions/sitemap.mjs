@@ -97,3 +97,8 @@ ${entries.join("\n")}
     },
   });
 };
+
+// Bind directly so SPA catch-all cannot swallow /sitemap.xml
+export const config = {
+  path: "/sitemap.xml",
+};

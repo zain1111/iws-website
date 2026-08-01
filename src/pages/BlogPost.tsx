@@ -4,6 +4,7 @@ import { ExternalLink } from "lucide-react";
 import AdSlot from "../components/AdSlot";
 import { openCalendlyPopup } from "../lib/calendly";
 import {
+  RESERVED_PATHS,
   blogImageUrl,
   formatPostDate,
   parseBlogContent,
@@ -31,6 +32,16 @@ export default function BlogPostPage() {
     void (async () => {
       setLoading(true);
       setRedirectTo(null);
+      setError(null);
+      setPost(null);
+
+      // Never treat static/seo files as blog posts (SPA fallback if redirects mis-order)
+      if (!slug || RESERVED_PATHS.has(slug) || slug.includes(".")) {
+        setError("not_found");
+        setLoading(false);
+        return;
+      }
+
       const [p, a] = await Promise.all([
         supabase.from("blog_posts").select("*").eq("slug", slug).eq("status", "published").maybeSingle(),
         supabase.from("blog_ad_slots").select("*"),
