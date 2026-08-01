@@ -153,6 +153,13 @@ export default function AdminBlogPage() {
 
       if (mode === "edit" && editingId) {
         const existing = posts.find((p) => p.id === editingId);
+        // Renamed permalink: 301 old slug → new slug
+        if (existing && existing.slug !== slug) {
+          await supabase.from("blog_redirects").upsert({
+            slug: existing.slug,
+            target: `/${slug}`,
+          });
+        }
         const { error: err } = await supabase
           .from("blog_posts")
           .update({
@@ -171,6 +178,9 @@ export default function AdminBlogPage() {
         if (err) throw new Error(err.message);
         setMessage("Post created");
       }
+
+      // Live slug must not stay in the redirect table
+      await supabase.from("blog_redirects").delete().eq("slug", slug);
       resetForm();
       await load();
     } catch (err) {
@@ -181,11 +191,26 @@ export default function AdminBlogPage() {
   }
 
   async function deletePost(post: BlogPost) {
-    if (!window.confirm(`Delete “${post.title}”?`)) return;
+    if (!window.confirm(`Delete “${post.title}”? The URL /${post.slug} will 301 to /blog.`)) return;
+
+    const { error: redirectErr } = await supabase.from("blog_redirects").upsert({
+      slug: post.slug,
+      target: "/blog",
+    });
+    if (redirectErr) {
+      setError(redirectErr.message);
+      return;
+    }
+
     if (post.featured_image_path) {
       await supabase.storage.from("blog-images").remove([post.featured_image_path]);
     }
-    await supabase.from("blog_posts").delete().eq("id", post.id);
+    const { error: delErr } = await supabase.from("blog_posts").delete().eq("id", post.id);
+    if (delErr) {
+      setError(delErr.message);
+      return;
+    }
+    setMessage(`Deleted — /${post.slug} now 301 redirects to /blog`);
     await load();
   }
 

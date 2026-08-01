@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+# Block admin auth + workspace paths from indexing
+Disallow: /admin/login
+Disallow: /admin/signup
+Disallow: /admin/pending
+Disallow: /admin/setup
+
+Sitemap: https://theiwsolutions.com/sitemap.xml

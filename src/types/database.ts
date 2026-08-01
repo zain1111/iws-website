@@ -206,11 +206,27 @@ export interface BlogAiRun {
   finished_at: string | null;
 }
 
+export interface BlogAiSettings {
+  id: number;
+  enabled: boolean;
+  schedule_hour_utc: number;
+  daily_article_count: number;
+  ai_topic_count: number;
+  last_scheduled_run_on: string | null;
+  updated_at: string;
+}
+
 export interface BlogAdSlot {
   slot_key: BlogAdSlotKey | string;
   label: string;
   ad_code: string;
   updated_at: string;
+}
+
+export interface BlogRedirect {
+  slug: string;
+  target: string;
+  created_at: string;
 }
 
 export interface Database {
@@ -306,6 +322,16 @@ export interface Database {
         Row: BlogAiRun;
         Insert: Omit<BlogAiRun, "id" | "created_at"> & { id?: string; created_at?: string };
         Update: Partial<BlogAiRun>;
+      };
+      blog_ai_settings: {
+        Row: BlogAiSettings;
+        Insert: Partial<BlogAiSettings> & { id?: number };
+        Update: Partial<BlogAiSettings>;
+      };
+      blog_redirects: {
+        Row: BlogRedirect;
+        Insert: Omit<BlogRedirect, "created_at"> & { created_at?: string };
+        Update: Partial<BlogRedirect>;
       };
     };
   };

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 import AdSlot from "../components/AdSlot";
 import { openCalendlyPopup } from "../lib/calendly";
@@ -7,13 +7,11 @@ import {
   blogImageUrl,
   formatPostDate,
   parseBlogContent,
-  postFiverrUrl,
   postUpworkUrl,
 } from "../lib/blog";
 import { applyBlogPostSeo } from "../lib/seo";
 import { supabase } from "../lib/supabase";
-import type { BlogAdSlot, BlogPost } from "../types/database";
-import { CONTACT } from "../data/contact";
+import type { BlogAdSlot, BlogPost, BlogRedirect } from "../types/database";
 
 function slotMap(rows: BlogAdSlot[]) {
   const map: Record<string, string> = {};
@@ -25,19 +23,35 @@ export default function BlogPostPage() {
   const { slug = "" } = useParams();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [ads, setAds] = useState<Record<string, string>>({});
+  const [redirectTo, setRedirectTo] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     void (async () => {
       setLoading(true);
+      setRedirectTo(null);
       const [p, a] = await Promise.all([
         supabase.from("blog_posts").select("*").eq("slug", slug).eq("status", "published").maybeSingle(),
         supabase.from("blog_ad_slots").select("*"),
       ]);
       if (p.error) setError(p.error.message);
-      setPost((p.data as BlogPost | null) ?? null);
+
+      const found = (p.data as BlogPost | null) ?? null;
+      setPost(found);
       setAds(slotMap((a.data as BlogAdSlot[]) ?? []));
+
+      // Client fallback when edge 301 is unavailable (local Vite). Production uses edge 301.
+      if (!found && !p.error) {
+        const { data: redirect } = await supabase
+          .from("blog_redirects")
+          .select("target")
+          .eq("slug", slug)
+          .maybeSingle();
+        const target = (redirect as BlogRedirect | null)?.target;
+        if (target) setRedirectTo(target);
+      }
+
       setLoading(false);
     })();
   }, [slug]);
@@ -63,12 +77,29 @@ export default function BlogPostPage() {
     });
   }, [post, image]);
 
+  useEffect(() => {
+    if (redirectTo?.startsWith("http")) {
+      window.location.replace(redirectTo);
+    }
+  }, [redirectTo]);
+
   if (loading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center bg-paper pt-32">
         <p className="font-mono text-sm text-slate-400">Loading article…</p>
       </div>
     );
+  }
+
+  if (redirectTo) {
+    if (redirectTo.startsWith("http")) {
+      return (
+        <div className="min-h-[50vh] flex items-center justify-center bg-paper pt-32">
+          <p className="font-mono text-sm text-slate-400">Redirecting…</p>
+        </div>
+      );
+    }
+    return <Navigate to={redirectTo} replace />;
   }
 
   if (error || !post) {
@@ -176,29 +207,16 @@ export default function BlogPostPage() {
               </p>
               <p className="font-display text-xl mt-2 relative">Work with IWS</p>
               <p className="text-sm text-slate-300 mt-2 relative leading-relaxed">
-                Need a site that ships? Grab a gig or start a contract — same people who wrote this.
+                Need a site that ships? Book a free strategy call — same people who wrote this.
               </p>
+              <button
+                type="button"
+                onClick={() => void openCalendlyPopup("blog_sidebar")}
+                className="relative mt-4 w-full text-center rounded-full bg-coral-500 text-white font-display text-sm px-5 py-3 hover:bg-white hover:text-navy-900 transition-colors"
+              >
+                Book a free call
+              </button>
             </div>
-
-            <a
-              href={postFiverrUrl(post)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block rounded-2xl border border-navy-900/10 bg-white p-5 hover:border-[#1dbf73] transition-colors"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#1dbf73]">
-                  Fiverr
-                </span>
-                <ExternalLink size={14} className="text-slate-400 group-hover:text-[#1dbf73]" />
-              </div>
-              <p className="font-display text-navy-900 mt-2">Featured gig</p>
-              <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                Book a delivery on Fiverr — fast scoping, clear milestones.
-              </p>
-            </a>
-
-            <AdSlot code={ads.post_sidebar ?? ""} label="Ad — sidebar" />
 
             <a
               href={postUpworkUrl(post)}
@@ -218,16 +236,7 @@ export default function BlogPostPage() {
               </p>
             </a>
 
-            <a
-              href={CONTACT.calendlyUrl}
-              onClick={(e) => {
-                e.preventDefault();
-                void openCalendlyPopup("blog_sidebar");
-              }}
-              className="block text-center rounded-full bg-coral-500 text-white font-display text-sm px-5 py-3 hover:bg-navy-900 transition-colors"
-            >
-              Book a free call
-            </a>
+            <AdSlot code={ads.post_sidebar ?? ""} label="Ad — sidebar" />
           </aside>
         </div>
       </div>

@@ -1,9 +1,12 @@
-import { runBlogAiPipeline } from "./lib/blogAiPipeline.mjs";
+import { runScheduledBlogAiIfDue } from "./lib/blogAiPipeline.mjs";
 
-/** Daily ~06:00 UTC — publishes up to 3 SEO'd articles (AI topic guaranteed). */
+/**
+ * Runs hourly. Publishes only when admin schedule_hour_utc matches current UTC hour
+ * and a scheduled run has not already completed today.
+ */
 export default async () => {
   try {
-    const result = await runBlogAiPipeline({ trigger: "schedule", count: 3 });
+    const result = await runScheduledBlogAiIfDue();
     return new Response(JSON.stringify(result), {
       status: 200,
       headers: { "Content-Type": "application/json" },
@@ -17,5 +20,5 @@ export default async () => {
 };
 
 export const config = {
-  schedule: "0 6 * * *",
+  schedule: "0 * * * *",
 };

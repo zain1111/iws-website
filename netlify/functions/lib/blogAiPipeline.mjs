@@ -45,8 +45,8 @@ async function geminiGenerate(prompt, { json = false } = {}) {
   const key = env("GEMINI_API_KEY");
   if (!key) throw new Error("Missing GEMINI_API_KEY");
 
-  // gemini-2.0-flash free-tier quota is 0 (retired); use 2.5 Flash by default
-  const model = env("GEMINI_MODEL", "gemini-2.5-flash");
+  // Prefer current Flash-Lite — 2.0/2.5 Flash are unavailable to many new projects
+  const model = env("GEMINI_MODEL", "gemini-3.5-flash-lite");
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
 
   const body = {
@@ -123,25 +123,98 @@ async function fetchTrendSeeds() {
   return seeds;
 }
 
-function pickTopics(seeds, count = 3) {
+function pickTopics(seeds, count = 3, aiTopicCount = 1) {
+  const wantAi = Math.min(Math.max(Number(aiTopicCount) || 0, 0), count);
   const ai = seeds.filter((s) => s.bucket === "ai");
-  const saas = seeds.filter((s) => s.bucket === "saas");
-  const web = seeds.filter((s) => s.bucket === "web");
+  const other = seeds.filter((s) => s.bucket !== "ai");
   const picked = [];
 
-  const take = (arr) => {
-    while (arr.length && picked.length < count) {
+  const take = (arr, n) => {
+    let left = n;
+    while (arr.length && left > 0 && picked.length < count) {
       const i = Math.floor(Math.random() * arr.length);
       picked.push(arr.splice(i, 1)[0]);
+      left -= 1;
     }
   };
 
-  // Guarantee at least one AI article
-  take(ai.length ? ai : seeds);
-  take(saas);
-  take(web);
-  take(seeds.filter((s) => !picked.includes(s)));
+  // Prefer AI-bucket topics for the configured quota
+  take(ai, wantAi);
+  if (picked.length < wantAi) take(other, wantAi - picked.length);
+
+  // Fill remaining from SaaS / web / leftover AI
+  take(
+    other.filter((s) => !picked.includes(s)),
+    count - picked.length,
+  );
+  take(
+    ai.filter((s) => !picked.includes(s)),
+    count - picked.length,
+  );
+  take(
+    seeds.filter((s) => !picked.includes(s)),
+    count - picked.length,
+  );
+
   return picked.slice(0, count);
+}
+
+export async function loadBlogAiSettings(supabase) {
+  const { data, error } = await supabase.from("blog_ai_settings").select("*").eq("id", 1).maybeSingle();
+  if (error) throw new Error(error.message);
+  return (
+    data || {
+      id: 1,
+      enabled: true,
+      schedule_hour_utc: 6,
+      daily_article_count: 3,
+      ai_topic_count: 1,
+      last_scheduled_run_on: null,
+    }
+  );
+}
+
+/** Hourly cron entry — runs pipeline only when admin schedule hour matches (UTC). */
+export async function runScheduledBlogAiIfDue() {
+  const supabase = supabaseAdmin();
+  const settings = await loadBlogAiSettings(supabase);
+
+  if (!settings.enabled) {
+    return { skipped: true, reason: "disabled" };
+  }
+
+  const now = new Date();
+  const hour = now.getUTCHours();
+  const today = now.toISOString().slice(0, 10);
+
+  if (hour !== Number(settings.schedule_hour_utc)) {
+    return {
+      skipped: true,
+      reason: "wrong_hour",
+      current_hour_utc: hour,
+      schedule_hour_utc: settings.schedule_hour_utc,
+    };
+  }
+
+  if (settings.last_scheduled_run_on === today) {
+    return { skipped: true, reason: "already_ran_today", date: today };
+  }
+
+  const result = await runBlogAiPipeline({
+    trigger: "schedule",
+    count: settings.daily_article_count,
+    aiTopicCount: settings.ai_topic_count,
+  });
+
+  // Only lock the day if at least one article published (allow retry on total failure)
+  if ((result.published?.length || 0) > 0) {
+    await supabase
+      .from("blog_ai_settings")
+      .update({ last_scheduled_run_on: today, updated_at: new Date().toISOString() })
+      .eq("id", 1);
+  }
+
+  return result;
 }
 
 async function generateArticle(topic) {
@@ -240,12 +313,20 @@ async function uniqueSlug(supabase, base) {
 }
 
 /**
- * @param {{ trigger?: 'manual'|'schedule', count?: number, createdBy?: string|null }} opts
+ * @param {{ trigger?: 'manual'|'schedule', count?: number, aiTopicCount?: number, createdBy?: string|null }} opts
  */
 export async function runBlogAiPipeline(opts = {}) {
   const trigger = opts.trigger || "manual";
-  const count = Math.min(Math.max(opts.count || 3, 1), 3);
   const supabase = supabaseAdmin();
+  const settings = await loadBlogAiSettings(supabase);
+  const count = Math.min(
+    Math.max(opts.count ?? settings.daily_article_count ?? 3, 1),
+    3,
+  );
+  const aiTopicCount = Math.min(
+    Math.max(opts.aiTopicCount ?? settings.ai_topic_count ?? 1, 0),
+    count,
+  );
   const authorId = opts.createdBy || (await resolveAuthorId(supabase));
   const log = [];
 
@@ -267,10 +348,20 @@ export async function runBlogAiPipeline(opts = {}) {
   const published = [];
 
   try {
-    log.push({ step: "trends", message: "Fetching trending seeds" });
+    log.push({
+      step: "trends",
+      message: "Fetching trending seeds",
+      count,
+      ai_topic_count: aiTopicCount,
+    });
     const seeds = await fetchTrendSeeds();
-    const topics = pickTopics(seeds, count);
-    log.push({ step: "topics", message: "Selected topics", topics: topics.map((t) => t.title) });
+    const topics = pickTopics(seeds, count, aiTopicCount);
+    log.push({
+      step: "topics",
+      message: "Selected topics",
+      topics: topics.map((t) => t.title),
+      buckets: topics.map((t) => t.bucket),
+    });
 
     for (const topic of topics) {
       try {
@@ -288,6 +379,9 @@ export async function runBlogAiPipeline(opts = {}) {
         if (upErr) throw new Error(upErr.message);
 
         const now = new Date().toISOString();
+        // Reusing a previously deleted slug should cancel its 301
+        await supabase.from("blog_redirects").delete().eq("slug", article.slug);
+
         const { data: post, error: insErr } = await supabase
           .from("blog_posts")
           .insert({

@@ -19,17 +19,20 @@ export default async (req) => {
 
   try {
     const auth = await assertAuthorized(req);
-    let count = 3;
+    let count;
+    let aiTopicCount;
     try {
       const body = await req.json();
-      if (body?.count) count = Number(body.count) || 3;
+      if (body?.count != null) count = Number(body.count);
+      if (body?.aiTopicCount != null) aiTopicCount = Number(body.aiTopicCount);
     } catch {
-      /* no body */
+      /* no body — pipeline uses saved admin settings */
     }
 
     const result = await runBlogAiPipeline({
       trigger: auth.mode === "cron" ? "schedule" : "manual",
       count,
+      aiTopicCount,
       createdBy: auth.userId,
     });
 
