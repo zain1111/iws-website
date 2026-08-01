@@ -10,13 +10,20 @@ const NAV_LINKS = [
   { label: "About", to: "/about" },
   { label: "Services", to: "/services" },
   { label: "Portfolio", to: "/portfolio" },
+  { label: "Blog", to: "/blog" },
 ];
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
-  const onDarkHero = pathname === "/" || pathname === "/about" || pathname === "/portfolio" || pathname === "/services";
+  const onDarkHero =
+    pathname === "/" ||
+    pathname === "/about" ||
+    pathname === "/portfolio" ||
+    pathname === "/services" ||
+    pathname === "/blog" ||
+    pathname.startsWith("/blog/");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);

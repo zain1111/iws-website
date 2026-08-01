@@ -22,6 +22,7 @@ export default function Footer() {
               <li><Link to="/about" className="hover:text-coral-500 transition-colors">About</Link></li>
               <li><Link to="/services" className="hover:text-coral-500 transition-colors">Services</Link></li>
               <li><Link to="/portfolio" className="hover:text-coral-500 transition-colors">Portfolio</Link></li>
+              <li><Link to="/blog" className="hover:text-coral-500 transition-colors">Blog</Link></li>
               <li><Link to="/admin/login" className="hover:text-coral-500 transition-colors">Team login</Link></li>
               <li><button onClick={() => sectionNav("contact")} className="hover:text-coral-500 transition-colors">Contact</button></li>
             </ul>

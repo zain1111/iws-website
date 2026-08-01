@@ -8,7 +8,8 @@ export const CONTACT = {
   location: "Lahore, Pakistan",
   linkedin: "https://www.linkedin.com/in/zain-azeem1",
   upwork:
-    "https://www.upwork.com/freelancers/~01a505408c8515b6ca?mp_source=share",
+    "https://www.upwork.com/freelancers/zainazeem?mp_source=share",
+  fiverr: "https://www.fiverr.com/s/38zRKlr",
   whatsappHref: `https://wa.me/923090083051?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`,
   mailtoHref: "mailto:info@theiwsolutions.com",
   /** Primary booking link — Calendly 30‑min strategy call */

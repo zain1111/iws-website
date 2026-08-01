@@ -5,8 +5,18 @@ export type TaskStatus = "todo" | "in_progress" | "ready_for_you" | "done";
 export type AttachmentKind = "google_doc" | "google_sheet" | "link";
 export type InvoiceStatus = "draft" | "sent" | "paid";
 export type AppCurrency = "USD" | "PKR";
+export type BlogPostStatus = "draft" | "published";
 
 export const APP_CURRENCIES: AppCurrency[] = ["USD", "PKR"];
+
+export const BLOG_AD_SLOT_KEYS = [
+  "listing_banner",
+  "post_sidebar",
+  "post_inline",
+  "post_bottom",
+] as const;
+
+export type BlogAdSlotKey = (typeof BLOG_AD_SLOT_KEYS)[number];
 
 export const EXPENSE_CATEGORIES = [
   "rent",
@@ -161,6 +171,29 @@ export interface Expense {
   created_at: string;
 }
 
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featured_image_path: string | null;
+  status: BlogPostStatus;
+  fiverr_url: string | null;
+  upwork_url: string | null;
+  published_at: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BlogAdSlot {
+  slot_key: BlogAdSlotKey | string;
+  label: string;
+  ad_code: string;
+  updated_at: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -218,6 +251,20 @@ export interface Database {
         Row: Expense;
         Insert: Omit<Expense, "id" | "created_at"> & { id?: string };
         Update: Partial<Expense>;
+      };
+      blog_posts: {
+        Row: BlogPost;
+        Insert: Omit<BlogPost, "id" | "created_at" | "updated_at"> & {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<BlogPost>;
+      };
+      blog_ad_slots: {
+        Row: BlogAdSlot;
+        Insert: BlogAdSlot;
+        Update: Partial<BlogAdSlot>;
       };
     };
   };

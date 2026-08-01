@@ -19,6 +19,8 @@ export default function AdminShell() {
           { to: "/admin/users", label: "Users" },
           { to: "/admin/clients", label: "Clients" },
           { to: "/admin/invoices", label: "Invoices" },
+          { to: "/admin/blog", label: "Blog" },
+          { to: "/admin/blog-ads", label: "Blog ads" },
         ]
       : []),
   ];

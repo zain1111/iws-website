@@ -22,6 +22,10 @@ import InvoicesPage from "./admin/pages/Invoices";
 import ClientsPage from "./admin/pages/Clients";
 import FinancePage from "./admin/pages/Finance";
 import SalariesPage from "./admin/pages/Salaries";
+import AdminBlogPage from "./admin/pages/Blog";
+import AdminBlogAdsPage from "./admin/pages/BlogAds";
+import BlogPage from "./pages/Blog";
+import BlogPostPage from "./pages/BlogPost";
 
 export default function App() {
   return (
@@ -33,6 +37,8 @@ export default function App() {
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<ServicesPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
         </Route>
 
         <Route path="/admin/setup" element={<AdminSetup />} />
@@ -52,6 +58,8 @@ export default function App() {
             <Route path="approvals" element={<ApprovalsPage />} />
             <Route path="clients" element={<ClientsPage />} />
             <Route path="invoices" element={<InvoicesPage />} />
+            <Route path="blog" element={<AdminBlogPage />} />
+            <Route path="blog-ads" element={<AdminBlogAdsPage />} />
           </Route>
         </Route>
       </Routes>

@@ -13,7 +13,12 @@ const TAG_ID =
   (import.meta.env.VITE_GOOGLE_ADS_ID as string | undefined)?.trim() || "G-BTVFPF62HC";
 
 /** Only real public marketing routes — ignores admin + bot spam paths. */
-const TRACKED_PATHS = new Set(["/", "/portfolio", "/about", "/services"]);
+const TRACKED_PATHS = new Set(["/", "/portfolio", "/about", "/services", "/blog"]);
+
+function shouldTrackPath(pathname: string) {
+  if (TRACKED_PATHS.has(pathname)) return true;
+  return pathname.startsWith("/blog/");
+}
 const SCROLL_MARKS = [25, 50, 75, 90] as const;
 
 /**
@@ -26,7 +31,7 @@ export default function GoogleTagPageViews() {
 
   useEffect(() => {
     if (typeof window.gtag !== "function") return;
-    if (!TRACKED_PATHS.has(pathname)) return;
+    if (!shouldTrackPath(pathname)) return;
 
     const page_path = `${pathname}${search}`;
     window.gtag("event", "page_view", {
@@ -39,7 +44,7 @@ export default function GoogleTagPageViews() {
 
   useEffect(() => {
     seenScroll.current = new Set();
-    if (!TRACKED_PATHS.has(pathname)) return;
+    if (!shouldTrackPath(pathname)) return;
 
     const onScroll = () => {
       const doc = document.documentElement;
