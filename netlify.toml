@@ -10,15 +10,14 @@
 [functions."blog-ai-schedule"]
   schedule = "0 * * * *"
 
+# Exact path first — must run before SPA catch-all redirects
+[[edge_functions]]
+  function = "sitemap"
+  path = "/sitemap.xml"
+
 [[edge_functions]]
   function = "blog-redirect"
   path = "/*"
-
-[[redirects]]
-  from = "/sitemap.xml"
-  to = "/.netlify/functions/sitemap"
-  status = 200
-  force = true
 
 [[redirects]]
   from = "/*"
