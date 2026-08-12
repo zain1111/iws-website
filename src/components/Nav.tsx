@@ -31,6 +31,7 @@ export default function Nav() {
     pathname === "/portfolio" ||
     pathname.startsWith("/portfolio/") ||
     pathname === "/services" ||
+    pathname.startsWith("/services/") ||
     pathname === "/blog" ||
     pathname === "/contact" ||
     pathname === "/privacy" ||

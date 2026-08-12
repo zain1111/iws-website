@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Portfolio from "./pages/Portfolio";
 import About from "./pages/About";
 import ServicesPage from "./pages/ServicesPage";
+import ServiceDetailPage from "./pages/ServiceDetail";
 import ProtectedRoute from "./admin/components/ProtectedRoute";
 import AdminShell from "./admin/components/AdminShell";
 import AdminLogin from "./admin/pages/Login";
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="/portfolio/:slug" element={<CaseStudyPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<ServicesPage />} />
+          <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostRedirect />} />
           <Route path="/contact" element={<ContactPage />} />

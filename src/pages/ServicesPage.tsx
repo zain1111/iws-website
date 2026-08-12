@@ -30,7 +30,7 @@ function ServiceBlock({ service, index }: { service: Service; index: number }) {
           </Reveal>
         ))}
       </ul>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 mb-8">
         {service.stack.map((t) => (
           <span
             key={t}
@@ -40,6 +40,13 @@ function ServiceBlock({ service, index }: { service: Service; index: number }) {
           </span>
         ))}
       </div>
+      <Link
+        to={`/services/${service.id}`}
+        className="group inline-flex items-center gap-2 font-display text-navy-900 border-b-2 border-coral-500 pb-1 hover:text-coral-500 transition-colors"
+      >
+        Full service details
+        <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+      </Link>
     </Reveal>
   );
 
@@ -138,13 +145,13 @@ export default function ServicesPage() {
           />
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
             {SERVICES.map((s, i) => (
-              <a
+              <Link
                 key={s.id}
-                href={`#${s.id}`}
+                to={`/services/${s.id}`}
                 className="shrink-0 font-mono text-xs px-4 py-2 rounded-full border border-navy-900/10 text-navy-900 hover:border-coral-500 hover:text-coral-500 transition-colors"
               >
                 {String(i + 1).padStart(2, "0")} {s.title}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

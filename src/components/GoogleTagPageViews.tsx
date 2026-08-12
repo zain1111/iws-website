@@ -18,6 +18,9 @@ const TRACKED_PATHS = new Set(["/", "/portfolio", "/about", "/services", "/blog"
 
 function shouldTrackPath(pathname: string) {
   if (TRACKED_PATHS.has(pathname)) return true;
+  if (pathname.startsWith("/services/")) return true;
+  if (pathname.startsWith("/portfolio/")) return true;
+  if (pathname === "/contact" || pathname === "/privacy" || pathname === "/terms") return true;
   const parts = pathname.split("/").filter(Boolean);
   if (parts.length !== 1) return false;
   return !RESERVED_PATHS.has(parts[0]);

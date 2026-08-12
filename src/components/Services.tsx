@@ -38,7 +38,7 @@ export default function Services() {
           {SERVICES.map((s, i) => (
             <Reveal key={s.id} delay={(i % 3) * 0.09 + Math.floor(i / 3) * 0.04} variant="scale" className="h-full">
               <Link
-                to={`/services#${s.id}`}
+                to={`/services/${s.id}`}
                 className="group bg-paper hover:bg-navy-900 transition-colors duration-400 p-8 h-full min-h-[220px] flex flex-col justify-between relative overflow-hidden block"
               >
                 <div
