@@ -3,9 +3,9 @@
 
 create table if not exists public.blog_ai_settings (
   id int primary key default 1 check (id = 1),
-  enabled boolean not null default true,
+  enabled boolean not null default false,
   schedule_hour_utc int not null default 6 check (schedule_hour_utc between 0 and 23),
-  daily_article_count int not null default 3 check (daily_article_count between 1 and 3),
+  daily_article_count int not null default 1 check (daily_article_count between 1 and 3),
   ai_topic_count int not null default 1 check (ai_topic_count between 0 and 3),
   last_scheduled_run_on date,
   updated_at timestamptz not null default now()

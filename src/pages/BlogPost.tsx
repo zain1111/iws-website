@@ -182,27 +182,26 @@ export default function BlogPostPage() {
               ))}
             </div>
 
-            <div className="my-12 relative">
-              <div
-                className="absolute -inset-x-4 -inset-y-3 bg-navy-900/[0.03] -skew-y-1 rounded-2xl"
-                aria-hidden
-              />
-              <div className="relative py-6">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mb-3 text-center">
-                  Sponsored
-                </p>
-                <AdSlot code={ads.post_inline ?? ""} label="Ad — mid article" />
+            {/* Single mid-article ad only — lower density for AdSense policy */}
+            {(ads.post_inline ?? "").trim() && (
+              <div className="my-12 relative">
+                <div
+                  className="absolute -inset-x-4 -inset-y-3 bg-navy-900/[0.03] -skew-y-1 rounded-2xl"
+                  aria-hidden
+                />
+                <div className="relative py-6">
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mb-3 text-center">
+                    Sponsored
+                  </p>
+                  <AdSlot code={ads.post_inline ?? ""} label="Ad — mid article" />
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="prose-blog space-y-6 max-w-3xl">
               {afterAd.map((block, i) => (
                 <ContentBlock key={`b-${i}`} block={block} />
               ))}
-            </div>
-
-            <div className="mt-14">
-              <AdSlot code={ads.post_bottom ?? ""} label="Ad — before CTA" className="max-w-3xl" />
             </div>
           </div>
 
@@ -246,8 +245,6 @@ export default function BlogPostPage() {
                 Top-rated freelancing profile — long-term builds welcome.
               </p>
             </a>
-
-            <AdSlot code={ads.post_sidebar ?? ""} label="Ad — sidebar" />
           </aside>
         </div>
       </div>

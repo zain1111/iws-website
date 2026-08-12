@@ -28,6 +28,10 @@ import AdminBlogAiPage from "./admin/pages/BlogAi";
 import BlogPage from "./pages/Blog";
 import BlogPostPage from "./pages/BlogPost";
 import BlogPostRedirect from "./pages/BlogPostRedirect";
+import ContactPage from "./pages/Contact";
+import PrivacyPage from "./pages/Privacy";
+import TermsPage from "./pages/Terms";
+import CaseStudyPage from "./pages/CaseStudy";
 
 export default function App() {
   return (
@@ -37,10 +41,14 @@ export default function App() {
         <Route element={<MarketingLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/:slug" element={<CaseStudyPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostRedirect />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
           <Route path="/:slug" element={<BlogPostPage />} />
         </Route>
 

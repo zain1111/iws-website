@@ -59,8 +59,8 @@ export default function Portfolio() {
             className="mt-6 max-w-xl text-slate-300 text-lg leading-relaxed"
           >
             A cross-section of real client work — AI platforms, editorial systems,
-            corporate sites, and marketing builds. Every one is running in
-            production. Click any card to visit it live.
+            corporate sites, and marketing builds. Cards marked “Case study” open a
+            full write-up; others link to the live site.
           </motion.p>
         </motion.div>
       </section>

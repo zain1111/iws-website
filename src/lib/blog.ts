@@ -13,6 +13,8 @@ export const RESERVED_PATHS = new Set([
   "blog",
   "admin",
   "contact",
+  "privacy",
+  "terms",
   "login",
   "signup",
   "sitemap.xml",

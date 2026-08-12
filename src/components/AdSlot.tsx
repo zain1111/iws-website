@@ -14,10 +14,10 @@ interface AdSlotProps {
 }
 
 /**
- * Renders an admin-configured AdSense unit. Falls back to a subtle placeholder
- * when no code is set (keeps layout stable in design/preview).
+ * Renders an admin-configured AdSense unit.
+ * Renders nothing when empty — no dashed placeholders (better for AdSense review).
  */
-export default function AdSlot({ code, className = "", label = "Advertisement" }: AdSlotProps) {
+export default function AdSlot({ code, className = "", label: _label = "Advertisement" }: AdSlotProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const html = code.trim();
 
@@ -31,16 +31,7 @@ export default function AdSlot({ code, className = "", label = "Advertisement" }
     }
   }, [html]);
 
-  if (!html) {
-    return (
-      <div
-        className={`flex min-h-[120px] items-center justify-center rounded-xl border border-dashed border-navy-900/15 bg-navy-900/[0.03] ${className}`}
-        aria-hidden
-      >
-        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">{label}</span>
-      </div>
-    );
-  }
+  if (!html) return null;
 
   return <div ref={hostRef} className={`ad-slot overflow-hidden ${className}`} />;
 }

@@ -165,9 +165,9 @@ export async function loadBlogAiSettings(supabase) {
   return (
     data || {
       id: 1,
-      enabled: true,
+      enabled: false,
       schedule_hour_utc: 6,
-      daily_article_count: 3,
+      daily_article_count: 1,
       ai_topic_count: 1,
       last_scheduled_run_on: null,
     }

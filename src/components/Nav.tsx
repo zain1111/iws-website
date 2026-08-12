@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { label: "Services", to: "/services" },
   { label: "Portfolio", to: "/portfolio" },
   { label: "Blog", to: "/blog" },
+  { label: "Contact", to: "/contact" },
 ];
 
 function isLikelyBlogPost(pathname: string) {
@@ -28,8 +29,12 @@ export default function Nav() {
     pathname === "/" ||
     pathname === "/about" ||
     pathname === "/portfolio" ||
+    pathname.startsWith("/portfolio/") ||
     pathname === "/services" ||
     pathname === "/blog" ||
+    pathname === "/contact" ||
+    pathname === "/privacy" ||
+    pathname === "/terms" ||
     isLikelyBlogPost(pathname);
 
   useEffect(() => {

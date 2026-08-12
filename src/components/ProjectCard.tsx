@@ -1,4 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { CASE_STUDY_SLUGS } from "../data/caseStudies";
 import type { Project } from "../data/projects";
 import { trackPortfolioProject } from "../lib/analytics";
 import Parallax from "./Parallax";
@@ -20,26 +22,26 @@ export default function ProjectCard({
   source = "portfolio",
 }: ProjectCardProps) {
   const dark = theme === "dark";
-  return (
-    <a
-      href={project.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={() =>
-        trackPortfolioProject({
-          slug: project.slug,
-          name: project.name,
-          category: project.category,
-          source,
-        })
-      }
-      className={`group flex h-full flex-col overflow-hidden rounded-2xl border transition-colors duration-300 ${
-        dark
-          ? "border-white/10 bg-navy-800/40 hover:border-white/25"
-          : "border-navy-900/10 bg-white hover:border-navy-900/25"
-      }`}
-    >
-      {/* Media: live screenshot drifts on scroll, or a branded gradient tile */}
+  const hasCaseStudy = CASE_STUDY_SLUGS.has(project.slug);
+  const href = hasCaseStudy ? `/portfolio/${project.slug}` : project.url;
+  const external = !hasCaseStudy;
+
+  const className = `group flex h-full flex-col overflow-hidden rounded-2xl border transition-colors duration-300 ${
+    dark
+      ? "border-white/10 bg-navy-800/40 hover:border-white/25"
+      : "border-navy-900/10 bg-white hover:border-navy-900/25"
+  }`;
+
+  const onTrack = () =>
+    trackPortfolioProject({
+      slug: project.slug,
+      name: project.name,
+      category: project.category,
+      source,
+    });
+
+  const body = (
+    <>
       <div
         className={`relative overflow-hidden bg-navy-900 ${compact ? "aspect-[16/11]" : "aspect-[16/10]"}`}
       >
@@ -73,6 +75,11 @@ export default function ProjectCard({
         >
           <ArrowUpRight size={compact ? 14 : 18} />
         </span>
+        {hasCaseStudy && (
+          <span className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-wide bg-coral-500 text-white px-2 py-1 rounded-full">
+            Case study
+          </span>
+        )}
         <div
           className={`absolute top-0 left-0 bg-coral-500 ${compact ? "w-9 h-9" : "w-12 h-12"}`}
           style={{ clipPath: "polygon(0 0, 100% 0, 0 100%)" }}
@@ -80,7 +87,6 @@ export default function ProjectCard({
         />
       </div>
 
-      {/* Body */}
       <div className={`flex flex-1 flex-col ${compact ? "p-4" : "p-6"}`}>
         <p className={`font-mono text-xs text-coral-500 ${compact ? "mb-1.5" : "mb-3"}`}>
           {project.category}
@@ -114,6 +120,26 @@ export default function ProjectCard({
           </div>
         )}
       </div>
-    </a>
+    </>
+  );
+
+  if (external) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onTrack}
+        className={className}
+      >
+        {body}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={href} onClick={onTrack} className={className}>
+      {body}
+    </Link>
   );
 }

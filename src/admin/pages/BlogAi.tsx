@@ -6,9 +6,9 @@ import type { BlogAiRun, BlogAiSettings } from "../../types/database";
 
 const defaultSettings: BlogAiSettings = {
   id: 1,
-  enabled: true,
+  enabled: false,
   schedule_hour_utc: 6,
-  daily_article_count: 3,
+  daily_article_count: 1,
   ai_topic_count: 1,
   last_scheduled_run_on: null,
   updated_at: new Date().toISOString(),
@@ -145,7 +145,8 @@ export default function AdminBlogAiPage() {
         <h1 className="font-display text-3xl text-navy-900 font-semibold">AI Publisher</h1>
         <p className="text-sm text-slate-500 mt-2 max-w-2xl leading-relaxed">
           Finds trending SaaS / web / AI topics, writes SEO articles (600+ words), generates images,
-          and publishes on your schedule.
+          and publishes on your schedule. Keep auto-publish <strong>off</strong> while AdSense is
+          under review — prefer fewer, human-edited posts.
         </p>
       </div>
 

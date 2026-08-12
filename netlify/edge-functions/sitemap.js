@@ -25,8 +25,16 @@ export default async (request) => {
     { path: "/", changefreq: "weekly", priority: "1.0" },
     { path: "/blog", changefreq: "daily", priority: "0.9" },
     { path: "/portfolio", changefreq: "weekly", priority: "0.8" },
+    { path: "/portfolio/bionicvo", changefreq: "monthly", priority: "0.75" },
+    { path: "/portfolio/ricekids", changefreq: "monthly", priority: "0.75" },
+    { path: "/portfolio/humanistai", changefreq: "monthly", priority: "0.75" },
+    { path: "/portfolio/ledgerist", changefreq: "monthly", priority: "0.75" },
+    { path: "/portfolio/vanguard", changefreq: "monthly", priority: "0.75" },
     { path: "/services", changefreq: "monthly", priority: "0.8" },
     { path: "/about", changefreq: "monthly", priority: "0.7" },
+    { path: "/contact", changefreq: "monthly", priority: "0.7" },
+    { path: "/privacy", changefreq: "yearly", priority: "0.3" },
+    { path: "/terms", changefreq: "yearly", priority: "0.3" },
   ];
 
   const entries = staticPages.map((p) =>

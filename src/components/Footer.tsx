@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
 import logoWhite from "../assets/logo-white.png";
 import { CONTACT } from "../data/contact";
-import { useSectionNav } from "../hooks/useSectionNav";
 
 export default function Footer() {
-  const sectionNav = useSectionNav();
   return (
     <footer className="bg-navy-900 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -23,8 +21,7 @@ export default function Footer() {
               <li><Link to="/services" className="hover:text-coral-500 transition-colors">Services</Link></li>
               <li><Link to="/portfolio" className="hover:text-coral-500 transition-colors">Portfolio</Link></li>
               <li><Link to="/blog" className="hover:text-coral-500 transition-colors">Blog</Link></li>
-              <li><Link to="/admin/login" className="hover:text-coral-500 transition-colors">Team login</Link></li>
-              <li><button onClick={() => sectionNav("contact")} className="hover:text-coral-500 transition-colors">Contact</button></li>
+              <li><Link to="/contact" className="hover:text-coral-500 transition-colors">Contact</Link></li>
             </ul>
           </div>
           <div>
@@ -48,9 +45,16 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <p className="font-mono text-xs text-slate-500 pt-8">
-          <span className="text-coral-500">/*</span> © {new Date().getFullYear()} Integrated Web Solutions. Built in-house. <span className="text-coral-500">*/</span>
-        </p>
+        <div className="pt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <p className="font-mono text-xs text-slate-500">
+            <span className="text-coral-500">/*</span> © {new Date().getFullYear()} Integrated Web Solutions. Built in-house. <span className="text-coral-500">*/</span>
+          </p>
+          <p className="font-mono text-xs text-slate-500 flex flex-wrap gap-4">
+            <Link to="/privacy" className="hover:text-coral-500 transition-colors">Privacy</Link>
+            <Link to="/terms" className="hover:text-coral-500 transition-colors">Terms</Link>
+            <Link to="/contact" className="hover:text-coral-500 transition-colors">Contact</Link>
+          </p>
+        </div>
       </div>
     </footer>
   );
